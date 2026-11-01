@@ -5,7 +5,7 @@ type: software
 version: 1.0.0
 date-released: 2026-11-01
 license: MIT
-repository-code: "https://github.com/<your-username>/dengue-cbc-crosscohort"
+repository-code: "https://github.com/abdulkadirgedow/dengue-cbc-crosscohort"
 keywords:
   - dengue
   - complete blood count

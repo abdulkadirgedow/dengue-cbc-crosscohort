@@ -44,7 +44,7 @@ The study trains dengue classifiers on routine complete blood count (CBC) data f
 ## Quick start
 
 ```bash
-git clone https://github.com/<your-username>/dengue-cbc-crosscohort.git
+git clone https://github.com/abdulkadirgedow/dengue-cbc-crosscohort.git
 cd dengue-cbc-crosscohort
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
