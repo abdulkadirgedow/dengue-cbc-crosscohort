@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Code for: Do Blood-Count-Based Dengue Classifiers Generalize Across Clinical Cohorts? A Leakage-Free External Validation and Data-Integrity Audit of Public Bangladeshi Datasets"
+type: software
+version: 1.0.0
+date-released: 2026-11-01
+license: MIT
+repository-code: "https://github.com/<your-username>/dengue-cbc-crosscohort"
+keywords:
+  - dengue
+  - complete blood count
+  - machine learning
+  - external validation
+  - data leakage
+  - Bangladesh
+authors:
+  - family-names: Gedow
+    given-names: Abdulkadir Salad
+    email: a.gedowscientist@gmail.com
+    orcid: "https://orcid.org/0009-0002-4031-7160"
+    affiliation: "Department of Software Engineering, Daffodil International University, Dhaka, Bangladesh"
+  - family-names: Mohamed
+    given-names: Ahmed Hassan
+    affiliation: "Muraajaco, Mogadishu, Somalia"
+  - family-names: Islam
+    given-names: Md. Muksit Ul
+    affiliation: "Department of Computer Science and Engineering, Dhaka International University, Dhaka, Bangladesh"

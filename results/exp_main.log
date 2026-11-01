@@ -1,0 +1,19 @@
+[     0s] description done
+[    15s] cohort discrimination done
+[    16s] internal Jamalpur LR: AUC 0.615
+[    71s] internal Jamalpur RF: AUC 0.682
+[   126s] internal Jamalpur GBM: AUC 0.665
+[   402s] internal Jamalpur Stacked: AUC 0.649
+[   403s] internal Dhaka LR: AUC 0.869
+[   448s] internal Dhaka RF: AUC 0.943
+[   498s] internal Dhaka GBM: AUC 0.946
+[   742s] internal Dhaka Stacked: AUC 0.941
+[   787s] external all8|Jamalpur->Dhaka: LR 0.523, RF 0.788, GBM 0.776, Stacked 0.637
+[   836s] external all8|Dhaka->Jamalpur: LR 0.560, RF 0.558, GBM 0.526, Stacked 0.545
+[   882s] external noRBC|Jamalpur->Dhaka: LR 0.526, RF 0.804, GBM 0.735, Stacked 0.614
+[   926s] external noRBC|Dhaka->Jamalpur: LR 0.538, RF 0.542, GBM 0.531, Stacked 0.533
+[   970s] external PLT+WBC|Jamalpur->Dhaka: LR 0.690, RF 0.733, GBM 0.695, Stacked 0.453
+[  1009s] external PLT+WBC|Dhaka->Jamalpur: LR 0.537, RF 0.490, GBM 0.497, Stacked 0.517
+[  1098s] age-restricted all8 done
+[  1186s] age-restricted noRBC done
+[  1186s] ALL DONE

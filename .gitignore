@@ -1,0 +1,24 @@
+# Raw datasets are not redistributed (download from Mendeley Data, see data/README.md)
+data/*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# LaTeX build files
+/*.aux
+/*.log
+/*.out
+/*.toc
+*.synctex.gz
+supplement.tex
+supplement.pdf
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

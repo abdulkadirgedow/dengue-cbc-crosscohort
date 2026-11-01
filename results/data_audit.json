@@ -1,0 +1,159 @@
+{
+ "Jamalpur": {
+  "rows": 1523,
+  "cols": 19,
+  "pos": 1042,
+  "neg": 481,
+  "missing": 0,
+  "exact_duplicate_rows": 12,
+  "duplicate_feature_vectors_conflicting_label": 3,
+  "pct_max": 234.0,
+  "pct_rows_gt_1": 1,
+  "rbc_distinct_values": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "platelet_range": [
+   56000.0,
+   299803.0
+  ],
+  "platelet_lt_100k_frac_pos": 0.1928982725527831,
+  "platelet_lt_100k_frac_neg": 0.11434511434511435,
+  "univariable_auc": {
+   "Age": 0.5537817087721119,
+   "Hemoglobin(g/dl)": 0.518022673492923,
+   "Neutrophils(%)": 0.5752890052314237,
+   "Lymphocytes(%)": 0.584641521781637,
+   "Monocytes(%)": 0.5919359858899207,
+   "Eosinophils(%)": 0.5694011596122921,
+   "RBC": 0.5837885722722576,
+   "HCT(%)": 0.5439533361798237,
+   "MCV(fl)": 0.5333478318123233,
+   "MCH(pg)": 0.53127980335274,
+   "MCHC(g/dl)": 0.5497065055606323,
+   "RDW-CV(%)": 0.6245076835287968,
+   "Total Platelet Count(/cumm)": 0.5317257313418542,
+   "MPV(fl)": 0.5568563174129394,
+   "PDW(%)": 0.5078251882474532,
+   "PCT(%)": 0.5356233614391004,
+   "Total WBC count(/cumm)": 0.5591278566326552
+  }
+ },
+ "Dhaka": {
+  "rows": 1329,
+  "pos": 972,
+  "neg": 357,
+  "label": "NS1 antigen",
+  "missing_ALT": 1292,
+  "missing_AST": 1314,
+  "empty_columns": [
+   "Unnamed: 12"
+  ],
+  "exact_duplicate_rows": 42,
+  "implausible": {
+   "PLT<5 (x10^3/uL)": 10,
+   "WBC<1 (x10^3/uL)": 24,
+   "HCT<15%": 2,
+   "RBC>8 (x10^6/uL)": 3,
+   "Lymph+Neut>100%": 46
+  },
+  "platelet_lt_100_frac_pos": 0.6790123456790124,
+  "platelet_lt_100_frac_neg": 0.12324929971988796,
+  "univariable_auc": {
+   "Age": 0.5590151698539498,
+   "PLT": 0.8623935170776129,
+   "WBC": 0.6710470196308976,
+   "HCT": 0.5582370808405667,
+   "RBC": 0.5406652372883309,
+   "Lymph %": 0.5678868255120978,
+   "Neut %": 0.5628566241311339
+  }
+ },
+ "Multisite": {
+  "rows": 2085,
+  "pos": 913,
+  "neg": 1172,
+  "missing": 0,
+  "rows_identical_to_jamalpur_on_12_fields": 220,
+  "of_which_same_label": 219,
+  "pct_max": 234.0,
+  "shared_extremes_with_jamalpur": {
+   "Hb": [
+    10.4,
+    17.85,
+    10.4,
+    17.5
+   ],
+   "MCV": [
+    80.0,
+    100.0,
+    80.0,
+    100.0
+   ],
+   "RDW": [
+    11.0,
+    21.33,
+    11.0,
+    21.33
+   ],
+   "PCT": [
+    2e-05,
+    234.0,
+    2e-05,
+    234.0
+   ]
+  },
+  "univariable_auc_PLT": 0.7517807812073612,
+  "univariable_auc_WBC": 0.76459763970558
+ },
+ "Kalai": {
+  "rows": 1003,
+  "pos": 669,
+  "neg": 320,
+  "missing_label": 14,
+  "missing": 74,
+  "sex_categories": {
+   "Male": 518,
+   "Female": 450,
+   "Child": 35
+  },
+  "binary_coded_columns": [
+   "Differential Count",
+   "RBC PANEL"
+  ],
+  "wbc_range_pos": [
+   2000.0,
+   3700.0
+  ],
+  "wbc_range_neg": [
+   3600.0,
+   10900.0
+  ],
+  "best_single_wbc_cutoff": [
+   3800.0,
+   0.9989637305699481
+  ],
+  "univariable_auc": {
+   "Age": 0.5756516255605382,
+   "Haemoglobin": 0.5064275037369207,
+   "WBC Count": 0.9997987591785448,
+   "Platelet Count": 0.9948750553917886,
+   "PDW": 0.6584833299991706
+  },
+  "implausible": {
+   "Age>100": 2,
+   "Hb>20": 1,
+   "PDW>100": 2
+  },
+  "platelet_values_repeated_ge5": 84,
+  "top_repeated_platelet": {
+   "19000.0": 20,
+   "170000.0": 18,
+   "160000.0": 14,
+   "67000.0": 12,
+   "88000.0": 11
+  }
+ }
+}

@@ -1,0 +1,95 @@
+{
+ "_note": "Each entry verified against publisher/Crossref/preprint page on 2026-10-30. 'leakage_risk' summarises the reported protocol only; it is not a finding of error.",
+ "jamalpur_dataset": [
+  {
+   "key": "nirob2025",
+   "study": "Nirob et al., Data in Brief 2025",
+   "type": "Dataset paper",
+   "reported": "Univariable statistics only",
+   "protocol": "n/a",
+   "leakage_risk": "n/a"
+  },
+  {
+   "key": "tuhin2025",
+   "study": "Tuhin et al., Healthcare Analytics 2025",
+   "type": "Stacking ensemble (DengueStackX-19)",
+   "reported": "Acc 93.65% (10-fold CV, SMOTEENN); 96.38% hold-out",
+   "protocol": "Outlier removal (1,523 to 1,372), resampling incl. SMOTEENN; resampling appears to precede splitting (flagged by Yilmaz et al. 2026)",
+   "leakage_risk": "High"
+  },
+  {
+   "key": "tanvir2026",
+   "study": "Tanvir et al., Healthcare Analytics 2026",
+   "type": "Grey-wolf-optimised Extra Trees",
+   "reported": "Acc 95.78%",
+   "protocol": "Internal test set; details of resampling order not verifiable from public abstract",
+   "leakage_risk": "Unclear"
+  },
+  {
+   "key": "hasan2026",
+   "study": "Hasan et al., IDAA 2025 (Atlantis Press, 2026)",
+   "type": "LR, RF, XGBoost, SVM, NN",
+   "reported": "RF Acc 84.5%, AUC 0.69",
+   "protocol": "SMOTE oversampling, train/test split",
+   "leakage_risk": "Unclear"
+  },
+  {
+   "key": "jahan2026",
+   "study": "Jahan et al., Discover Viruses 2026",
+   "type": "Tree-augmented naive Bayes",
+   "reported": "Sensitivity 0.94-0.98, specificity 0.18-0.33",
+   "protocol": "10-fold CV",
+   "leakage_risk": "Low"
+  },
+  {
+   "key": "yilmaz2026",
+   "study": "Yilmaz et al., Diagnostics 2026",
+   "type": "RF, XGBoost, LightGBM, LR",
+   "reported": "AUROC 0.70-0.71 (hold-out, n=305)",
+   "protocol": "SMOTE inside training folds; Optuna tuning; held-out test",
+   "leakage_risk": "Low"
+  },
+  {
+   "key": "naimeen2026",
+   "study": "Naimeen & Soberanis, arXiv 2026",
+   "type": "LR, RF, XGBoost",
+   "reported": "AUC 0.64-0.66",
+   "protocol": "SMOTE on training only; 80/20 split; winsorising bounds computed before split",
+   "leakage_risk": "Low (minor)"
+  }
+ ],
+ "kalai_dataset": [
+  {
+   "key": "assaduzzaman2024",
+   "study": "Assaduzzaman et al., Data in Brief 2024",
+   "type": "Dataset paper",
+   "reported": "Statistics only",
+   "protocol": "n/a",
+   "leakage_risk": "n/a"
+  },
+  {
+   "key": "sarker2025",
+   "study": "Sarker et al., Information 2025",
+   "type": "GJO-optimised XGBoost",
+   "reported": "Acc 99.89% (10-fold CV) with WBC + platelets only",
+   "protocol": "Incomplete records removed; 10-fold CV",
+   "leakage_risk": "Label structure (WBC threshold separates classes)"
+  },
+  {
+   "key": "das2025",
+   "study": "Das et al., Applied Sciences 2025",
+   "type": "BSA-optimised gradient boosting",
+   "reported": "Acc 100% (all features); 99.49% (3 features)",
+   "protocol": "Mean imputation on full data; 5-fold CV",
+   "leakage_risk": "Label structure; minor preprocessing leakage"
+  },
+  {
+   "key": "haque2025",
+   "study": "Haque et al., Frontiers in AI 2025",
+   "type": "GA feature selection + GAN augmentation + decision tree",
+   "reported": "Acc 99.49%",
+   "protocol": "GAN-based augmentation for imbalance",
+   "leakage_risk": "Label structure"
+  }
+ ]
+}
