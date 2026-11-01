@@ -2,8 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](requirements.txt)
-<!-- After the first Zenodo release, replace the line below with the DOI badge Zenodo gives you -->
-<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23851004.svg)](https://doi.org/10.5281/zenodo.23851004)
 
 Code, results and figures for the paper:
 
@@ -91,7 +90,7 @@ Every script can also be run on its own; the usage line is at the top of each fi
 
 ## Citation
 
-If you use this code, please cite the paper (and this repository, using the "Cite this repository" button on GitHub or [`CITATION.cff`](CITATION.cff)).
+If you use this code, please cite the paper and the archived code: doi:[10.5281/zenodo.23851004](https://doi.org/10.5281/zenodo.23851004). The "Cite this repository" button on GitHub (from [`CITATION.cff`](CITATION.cff)) gives the full reference.
 
 ## Licence
 
