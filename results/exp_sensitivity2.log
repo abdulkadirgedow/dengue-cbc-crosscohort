@@ -1,0 +1,9 @@
+[   146s] diff_le100 external: Jamalpur->Dhaka: LR 0.520, RF 0.794, GBM 0.759, Stacked 0.639; Dhaka->Jamalpur: LR 0.561, RF 0.558, GBM 0.538, Stacked 0.549
+[   521s] diff_le100 internal Jamalpur: LR 0.612, RF 0.674, GBM 0.665, Stacked 0.647
+[   734s] diff_le100 internal Dhaka: LR 0.863, RF 0.934, GBM 0.940, Stacked 0.933
+[   793s] raw_extremes external: Jamalpur->Dhaka: LR 0.526, RF 0.794, GBM 0.782, Stacked 0.637; Dhaka->Jamalpur: LR 0.539, RF 0.563, GBM 0.529, Stacked 0.547
+[  1012s] raw_extremes internal Dhaka: LR 0.867, RF 0.936, GBM 0.939, Stacked 0.932
+[  1056s] unweighted external: Jamalpur->Dhaka: LR 0.519, RF 0.789, GBM 0.791, Stacked 0.685; Dhaka->Jamalpur: LR 0.559, RF 0.532, GBM 0.522, Stacked 0.533
+[  1215s] unweighted internal Jamalpur: LR 0.618, RF 0.685, GBM 0.674, Stacked 0.652
+[  1369s] unweighted internal Dhaka: LR 0.870, RF 0.932, GBM 0.937, Stacked 0.933
+[  1369s] ALL DONE

@@ -40,9 +40,10 @@ Imputation & Median of the training data (\texttt{SimpleImputer}) \\
 Logistic regression (LR) & Standardised inputs; L2 penalty, $C=1$; \texttt{class\_weight='balanced'}; max.\ 2,000 iterations \\
 Random forest (RF) & 300 trees; minimum leaf size 3; Gini criterion; \texttt{class\_weight='balanced'} \\
 Gradient boosting (GBM) & \texttt{HistGradientBoostingClassifier}; 200 iterations; learning rate 0.05; \texttt{class\_weight='balanced'} \\
-Stacked ensemble & Base learners: RF (200 trees, min.\ leaf 3, balanced), GBM (150 iterations, learning rate 0.05, balanced), LR (standardised, balanced); meta-learner LR (balanced); inner 3-fold CV for base-learner probabilities \\
-Threshold & Youden's $J$ maximised on out-of-fold training predictions (3-fold within internal CV folds; 5-fold for external validation) \\
-Internal validation & Stratified 5-fold CV, 3 repeats (15 folds) \\
+Stacked ensemble & Base learners: RF (200 trees, min.\ leaf 3, balanced), GBM (150 iterations, learning rate 0.05, balanced), LR (standardised, balanced); each base learner with its own median imputer; meta-learner LR (balanced); inner 3-fold CV for base-learner probabilities \\
+Threshold & Youden's $J$ maximised on out-of-fold training predictions (3-fold within internal CV folds; 5-fold for external validation), with identical feature vectors kept in the same inner fold \\
+Internal validation & Stratified group 5-fold CV, 3 repeats (seeds 42--44; 15 folds); identical feature vectors form one group \\
+Sensitivity analyses & Without class weights; differential sum $\le$100\%; flagged Dhaka values kept (Table S13) \\
 External CIs & 1,000 bootstrap resamples of the target cohort; percentile intervals; threshold fixed \\
 Local updating & RF; local fractions 5, 10, 20, 30\%; 10 stratified splits (seeds 100--109) \\
 Leakage experiments & RF and Extra Trees with 300 trees (other settings default); SMOTE $k=5$; SMOTEENN = SMOTE ($k=5$) + ENN ($k=3$); 80/20 stratified splits with seeds 0--9; stratified 10-fold CV (seed 42) \\
@@ -178,12 +179,19 @@ Scheme & Resampling applied & Acc. & Bal.\ acc. & AUC & Acc. & Bal.\ acc. & AUC 
 
 # S7 dedup
 n = D['n_after_dedup']
+UG = json.load(open(f'{res}/internal_ungrouped_cv.json'))['internal']
+MR = json.load(open(f'{res}/main_results.json'))['internal']
+fm = lambda v: f'{v[0]:.3f} $\\pm$ {v[1]:.3f}'
 T.append(r"""
-\begin{table}[htbp]\centering\caption{Sensitivity analysis after removing exact duplicate records (Jamalpur $n=""" + f"{n['Jamalpur']:,}".replace(',', '{,}') + r"""$; Dhaka $n=""" + f"{n['Dhaka']:,}".replace(',', '{,}') + r"""$). Internal: mean $\pm$ SD over 15 CV folds. External: AUC (95\% bootstrap CI).}\small
-\begin{tabular}{@{}lcc@{}}\toprule
+\begin{table}[htbp]\centering\caption{Duplicate handling. Internal AUC with duplicate-aware cross-validation (main analysis), ordinary ungrouped cross-validation, and after removing exact duplicate records (Jamalpur $n=""" + f"{n['Jamalpur']:,}".replace(',', '{,}') + r"""$; Dhaka $n=""" + f"{n['Dhaka']:,}".replace(',', '{,}') + r"""$). Internal: mean $\pm$ SD over 15 CV folds. External: AUC (95\% bootstrap CI).}\small
+\begin{tabular}{@{}p{7cm}cc@{}}\toprule
 Analysis & RF & GBM \\\midrule
-Internal, Jamalpur & """ + f"{D['internal']['Jamalpur|RF'][0]:.3f} $\\pm$ {D['internal']['Jamalpur|RF'][1]:.3f} & {D['internal']['Jamalpur|GBM'][0]:.3f} $\\pm$ {D['internal']['Jamalpur|GBM'][1]:.3f}" + r""" \\
-Internal, Dhaka & """ + f"{D['internal']['Dhaka|RF'][0]:.3f} $\\pm$ {D['internal']['Dhaka|RF'][1]:.3f} & {D['internal']['Dhaka|GBM'][0]:.3f} $\\pm$ {D['internal']['Dhaka|GBM'][1]:.3f}" + r""" \\
+Internal, Jamalpur, duplicate-aware CV (main analysis) & """ + fm(MR['Jamalpur']['RF']['auc']) + " & " + fm(MR['Jamalpur']['GBM']['auc']) + r""" \\
+Internal, Jamalpur, ungrouped CV & """ + fm(UG['Jamalpur']['RF']['auc']) + " & " + fm(UG['Jamalpur']['GBM']['auc']) + r""" \\
+Internal, Jamalpur, duplicates removed & """ + f"{D['internal']['Jamalpur|RF'][0]:.3f} $\\pm$ {D['internal']['Jamalpur|RF'][1]:.3f} & {D['internal']['Jamalpur|GBM'][0]:.3f} $\\pm$ {D['internal']['Jamalpur|GBM'][1]:.3f}" + r""" \\
+Internal, Dhaka, duplicate-aware CV (main analysis) & """ + fm(MR['Dhaka']['RF']['auc']) + " & " + fm(MR['Dhaka']['GBM']['auc']) + r""" \\
+Internal, Dhaka, ungrouped CV & """ + fm(UG['Dhaka']['RF']['auc']) + " & " + fm(UG['Dhaka']['GBM']['auc']) + r""" \\
+Internal, Dhaka, duplicates removed & """ + f"{D['internal']['Dhaka|RF'][0]:.3f} $\\pm$ {D['internal']['Dhaka|RF'][1]:.3f} & {D['internal']['Dhaka|GBM'][0]:.3f} $\\pm$ {D['internal']['Dhaka|GBM'][1]:.3f}" + r""" \\
 External, Jamalpur $\to$ Dhaka & """ + f"{ci(D['external']['Jamalpur->Dhaka|RF'])} & {ci(D['external']['Jamalpur->Dhaka|GBM'])}" + r""" \\
 External, Dhaka $\to$ Jamalpur & """ + f"{ci(D['external']['Dhaka->Jamalpur|RF'])} & {ci(D['external']['Dhaka->Jamalpur|GBM'])}" + r""" \\
 \bottomrule\end{tabular}\end{table}
@@ -287,7 +295,7 @@ tri = [
   ('20a', 'Participant flow and outcome numbers', f'Section {R("sec:eligibility")}; Figure 1; Table 2'),
   ('20b', 'Participant characteristics', f'Section {R("sec:cohorts")}; Figure 2; Table S2'),
   ('20c', 'Comparison with development data', f'Section {R("sec:cohorts")}; Figure 2; Table S2'),
-  ('21', 'Participants and events per analysis', 'Tables 2, 4--7; Tables S3--S9'),
+  ('21', 'Participants and events per analysis', 'Tables 2, 4--8; Tables S3--S9, S13, S14'),
   ('22', 'Full model specification', f'Section {R("sec:software")} (released code); Table S1'),
   ('23a', 'Performance with confidence intervals, incl.\\ subgroups', f'Sections {R("sec:res-internal")}--{R("sec:res-cal")}; Tables 4--6; Tables S3, S4, S8, S9'),
   ('23b', 'Heterogeneity across clusters', 'Not possible (see 12d)'),
@@ -311,6 +319,111 @@ Item & Topic & Where reported \\\midrule
 """ + '\n'.join(r10) + r"""
 \bottomrule\end{tabularx}\end{table}
 """
+
+# ---------------------------------------------------------------- S11 search and datasets
+QQ = "``"; QE = "''"
+queries = [
+    QQ + 'comprehensive hematological dataset for dengue incidence in Bangladesh' + QE + ' Data in Brief Jamalpur',
+    QQ + 'Jamalpur Medical College Hospital' + QE + ' dengue hematological dataset Data in Brief 2025 Nirob',
+    'dengue Jamalpur hematological dataset machine learning 1523 patients',
+    'dengue Kalai Joypurhat dataset machine learning classification 1003 records',
+    'Comprehensive dengue hematology and clinical dataset from Bangladesh for machine learning and diagnostic research Mendeley Thakur Nasrin',
+    'Bangladesh dengue complete blood count dataset public Mendeley Kaggle GitHub NS1',
+    'Riya Chakraborty Khan ' + QQ + 'Artificial Intelligence-Based Early Detection of Dengue Using CBC Data' + QE + ' IEEE Access 320 dataset',
+]
+ds = [
+    ('Jamalpur 2024 (Mendeley 10.17632/6fsrsk3mb8.2)', '1,523', 'Full CBC; ' + QQ + 'Result' + QE, 'Main cohort'),
+    ('Dhaka 2025 (Mendeley 10.17632/jsbmtk8hty.4)', '1,329', 'CBC subset; NS1', 'Main cohort'),
+    ('Multi-site (Mendeley 10.17632/fmkp6fwrrk.1)', '2,085', 'Full CBC; ' + QQ + 'Result' + QE, 'Excluded: 220 records shared with Jamalpur'),
+    ('Kalai (Mendeley 10.17632/xrsbyjs24t.1)', '1,003', 'CBC subset; ' + QQ + 'Final Output' + QE, 'Excluded: labels reproduced by one WBC cut-off'),
+    ('Riya et al.\\ 2023, two Dhaka hospitals (GitHub)', '320', 'CBC with differential, no HCT; ' + QQ + 'Result' + QE, 'Third external cohort (added in revision)'),
+    ('Munshiganj (Mendeley 10.17632/673swz9tb4.1)', '1,018', 'Platelets, WBC, symptoms', 'Not analysed: no differential counts'),
+    ('Dhaka survey (Mendeley 10.17632/zdtc3n6xv2.4)', '1,000', 'Platelets, WBC, NS1/IgG/IgM, symptoms', 'Not analysed: no differential counts'),
+    ('Dhaka government institution (GitHub, ICCIT 2026)', '--', 'Hb, HCT, WBC, platelets; NS1', 'Not analysed: no differential counts'),
+]
+extra += (r"""
+\begin{table}[htbp]\centering\caption{Search for public datasets and modelling studies, repeated and documented on 9 November 2026 (original search completed 30 October 2026). Queries were run in a web search engine; Mendeley Data, Kaggle and GitHub were searched for public datasets, and articles citing each data article were traced. No modelling study on the Jamalpur 2024 or Kalai datasets was found beyond the nine in Table~1; one more study used a different dataset to predict severity and was out of scope.}\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{0.4cm}X@{}}\toprule
+\multicolumn{2}{@{}l}{\textit{Queries}}\\
+""" + '\n'.join(f'{i+1} & {q} \\\\' for i, q in enumerate(queries)) + r"""
+\bottomrule\end{tabularx}
+
+\vspace{6pt}
+\begin{tabularx}{\linewidth}{@{}p{5.2cm}p{1.0cm}p{3.6cm}X@{}}\toprule
+Dataset & Records & Variables; label & Status \\\midrule
+""" + '\n'.join(f'{a} & {b} & {c} & {d} \\\\' for a, b, c, d in ds) + r"""
+\bottomrule\end{tabularx}\end{table}
+""")
+
+# ---------------------------------------------------------------- S12 PROBAST+AI
+pb = [
+    ('Participants and data sources', 'High', 'Public datasets released by their creators; recruitment (consecutive or selected), presence of fever and timing of sampling are not documented.', 'High'),
+    ('Predictors', 'Low', 'Routine automated CBC values defined the same way in every cohort and available at the time of prediction; units checked and harmonised. Timing relative to illness onset is unknown.', 'Unclear'),
+    ('Outcome', 'High', 'Reference test not named for Jamalpur and Riya; NS1 alone for Dhaka, which is stage-dependent. Blinding of outcome assessment not documented.', 'High'),
+    ('Analysis', 'Low', 'All participants analysed; at least 357 events and non-events in each main cohort (109 non-events in Riya); discrimination and calibration reported with uncertainty; leakage avoided and duplicates grouped in CV; little missing data.', '--'),
+]
+extra += (r"""
+\begin{table}[htbp]\centering\caption{PROBAST+AI self-assessment of the model evaluations in this study (evaluation part; Moons et al., BMJ 2025;388:e082505). Overall risk of bias is rated high because of the participants and outcome domains, which reflect the public datasets rather than the analysis.}\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{2.6cm}p{1.3cm}Xp{1.6cm}@{}}\toprule
+Domain & Risk of bias & Rationale & Applicability concern \\\midrule
+""" + '\n'.join(f'{a} & {b} & {c} & {d} \\\\' for a, b, c, d in pb) + r"""
+\midrule
+Overall & High & Driven by unknown participant selection and undocumented or differing reference tests. & High \\
+\bottomrule\end{tabularx}\end{table}
+""")
+
+
+# ---------------------------------------------------------------- S13 additional sensitivity analyses
+s2p = f'{res}/sensitivity2_results.json'
+if os.path.exists(s2p):
+    S2 = json.load(open(s2p))
+    lab = {'diff_le100': r'Differential sum $\le$100\%', 'raw_extremes': 'Flagged Dhaka values kept',
+           'unweighted': 'Without class weights'}
+    r13 = []
+    for v, name in lab.items():
+        nn = S2[v]['n']
+        r13.append(r'\multicolumn{6}{@{}l}{\textit{' + name + f" (Jamalpur $n={nn['Jamalpur']:,}$, Dhaka $n={nn['Dhaka']:,}$)".replace(',', '{,}') + r'}}\\')
+        for d in ['Jamalpur->Dhaka', 'Dhaka->Jamalpur']:
+            for m in ['LR', 'RF', 'GBM', 'Stacked']:
+                e = S2[v]['external'][d][m]
+                r13.append(f"{d.replace('->', r' $\to$ ')} & {m} & {e['auc']:.3f} ({e['auc_ci'][0]:.3f}--{e['auc_ci'][1]:.3f}) & "
+                           f"{e['brier']:.3f} & {e['cal_slope']:.2f} & {e['cal_intercept']:.2f} \\\\")
+        for c, ii in S2[v]['internal'].items():
+            r13.append(f"Internal, {c} & -- & " + ', '.join(f"{m} {ii[m]['auc'][0]:.3f}" for m in ['LR', 'RF', 'GBM', 'Stacked'])
+                       + ' & ' + ', '.join(f"{ii[m]['brier'][0]:.3f}" for m in ['LR', 'RF', 'GBM', 'Stacked']) + r' & \multicolumn{2}{l}{} \\')
+        r13.append(r'\midrule')
+    extra += r"""
+\begin{table}[htbp]\centering\caption{Additional sensitivity analyses. External: AUC (95\% conditional bootstrap CI), Brier score, calibration slope and calibration-in-the-large. Internal: duplicate-aware cross-validated AUC and Brier score (mean over 15 folds; models in the order LR, RF, GBM, stacked).}\scriptsize
+\begin{tabular}{@{}llcccc@{}}\toprule
+Direction & Model & AUC (95\% CI) & Brier & Slope & CITL \\\midrule
+""" + '\n'.join(r13[:-1]) + r"""
+\bottomrule\end{tabular}\end{table}
+"""
+
+# ---------------------------------------------------------------- S14 third cohort
+t3p = f'{res}/third_cohort_results.json'
+if os.path.exists(t3p):
+    T3 = json.load(open(t3p))
+    fsl = {'shared7': 'Seven shared features', 'shared6_noRBC': 'Six features (without RBC)', 'PLT+WBC': 'Platelets + WBC'}
+    r14 = []
+    NM = {'Jamalpur': 'Jamalpur', 'Dhaka': 'Dhaka 2025', 'Riya': 'Dhaka 2023'}
+    for fs, name in fsl.items():
+        r14.append(r'\multicolumn{6}{@{}l}{\textit{' + name + r'}}\\')
+        for d, e0 in T3['external'][fs].items():
+            for m in ['LR', 'RF', 'GBM', 'Stacked']:
+                e = e0[m]
+                r14.append(f"{' $\\to$ '.join(NM[x] for x in d.split('->'))} & {m} & "
+                           f"{e['auc']:.3f} ({e['auc_ci'][0]:.3f}--{e['auc_ci'][1]:.3f}) & {e['brier']:.3f} & {e['cal_slope']:.2f} & {e['cal_intercept']:.2f} \\\\")
+        r14.append(r'\midrule')
+    R3 = T3['riya']
+    extra += r"""
+\begin{table}[htbp]\centering\caption{Third external cohort (Dhaka 2023; Riya et al., $n=320$, 211 positive). Recorded RBC of 0 ($n=1$) and WBC $<1\times10^3$/µL ($n=2$) were set to missing; """ + f"{R3['exact_duplicate_rows']}" + r""" exact duplicate rows and """ + f"{R3['lymph_plus_neut_gt100']}" + r""" records with a differential sum above 100\% were kept. Cohort discrimination AUC: """ + f"{T3['cohort_discrimination_auc']['Riya_vs_Dhaka']:.2f}" + r""" versus Dhaka 2025 and """ + f"{T3['cohort_discrimination_auc']['Riya_vs_Jamalpur']:.3f}" + r""" versus Jamalpur. A non-informative model predicting the prevalence has a Brier score of 0.225 in this cohort. AUC with 95\% conditional bootstrap CI.}\scriptsize
+\begin{tabular}{@{}llcccc@{}}\toprule
+Direction & Model & AUC (95\% CI) & Brier & Slope & CITL \\\midrule
+""" + '\n'.join(r14[:-1]) + r"""
+\bottomrule\end{tabular}\end{table}
+"""
+
 T[-1] = T[-1].replace(r'\end{document}', extra + r'\end{document}')
 open(out, 'w').write(''.join(T).replace('-0.00', '0.00'))
 print('written', out)

@@ -76,8 +76,28 @@
   "pos": 913,
   "neg": 1172,
   "missing": 0,
+  "match_fields": [
+   "Sex",
+   "Age",
+   "Hb",
+   "Neut",
+   "Lymph",
+   "MCV",
+   "RDW",
+   "PLT",
+   "MPV",
+   "PDW",
+   "PCT",
+   "WBC"
+  ],
+  "match_rounding_decimals": 4,
   "rows_identical_to_jamalpur_on_12_fields": 220,
-  "of_which_same_label": 219,
+  "jamalpur_rows_matched": 229,
+  "unique_matching_keys": 218,
+  "multisite_rows_matching_more_than_one_jamalpur_row": 13,
+  "of_which_same_label": 217,
+  "of_which_conflicting_jamalpur_labels": 3,
+  "of_which_different_label": 0,
   "pct_max": 234.0,
   "shared_extremes_with_jamalpur": {
    "Hb": [
@@ -155,5 +175,19 @@
    "67000.0": 12,
    "88000.0": 11
   }
+ },
+ "Jamalpur_vs_Dhaka": {
+  "fields": [
+   "Age",
+   "Sex",
+   "PLT",
+   "WBC",
+   "HCT",
+   "Lymph",
+   "Neut"
+  ],
+  "rounding_decimals": 2,
+  "records_matching_on_all_fields": 0,
+  "records_matching_on_PLT_WBC_HCT": 0
  }
 }

@@ -1,0 +1,20 @@
+[     5s] cohort discrimination {'Riya_vs_Dhaka': 0.7800837095560571, 'Riya_vs_Jamalpur': 0.9949288000656599}
+[   170s] internal shared7 Jamalpur: LR 0.616, RF 0.676, GBM 0.670
+[   345s] internal shared7 Dhaka: LR 0.866, RF 0.932, GBM 0.934
+[   397s] internal shared7 Riya: LR 0.955, RF 0.946, GBM 0.946
+[   615s] internal shared6_noRBC Jamalpur: LR 0.600, RF 0.658, GBM 0.654
+[   724s] internal shared6_noRBC Dhaka: LR 0.866, RF 0.930, GBM 0.930
+[   793s] internal shared6_noRBC Riya: LR 0.954, RF 0.950, GBM 0.945
+[  1034s] external shared7 Jamalpur->Riya: LR 0.370, RF 0.896, GBM 0.855, Stacked 0.815
+[  1242s] external shared7 Dhaka->Riya: LR 0.947, RF 0.884, GBM 0.869, Stacked 0.906
+[  1309s] external shared7 Riya->Jamalpur: LR 0.518, RF 0.542, GBM 0.538, Stacked 0.521
+[  1415s] external shared7 Riya->Dhaka: LR 0.855, RF 0.827, GBM 0.825, Stacked 0.847
+[  1691s] external shared6_noRBC Jamalpur->Riya: LR 0.410, RF 0.877, GBM 0.764, Stacked 0.727
+[  1888s] external shared6_noRBC Dhaka->Riya: LR 0.949, RF 0.887, GBM 0.865, Stacked 0.911
+[  2043s] external shared6_noRBC Riya->Jamalpur: LR 0.525, RF 0.562, GBM 0.538, Stacked 0.531
+[  2126s] external shared6_noRBC Riya->Dhaka: LR 0.855, RF 0.836, GBM 0.824, Stacked 0.850
+[  2377s] external PLT+WBC Jamalpur->Riya: LR 0.664, RF 0.879, GBM 0.797, Stacked 0.559
+[  2576s] external PLT+WBC Dhaka->Riya: LR 0.952, RF 0.880, GBM 0.848, Stacked 0.929
+[  2620s] external PLT+WBC Riya->Jamalpur: LR 0.532, RF 0.571, GBM 0.540, Stacked 0.552
+[  2678s] external PLT+WBC Riya->Dhaka: LR 0.862, RF 0.838, GBM 0.838, Stacked 0.855
+[  2678s] ALL DONE

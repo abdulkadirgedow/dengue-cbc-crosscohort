@@ -1,5 +1,5 @@
 {
- "_note": "Each entry verified against publisher/Crossref/preprint page on 2026-10-30. 'leakage_risk' summarises the reported protocol only; it is not a finding of error.",
+ "_note": "Each entry verified against publisher/Crossref/preprint page on 2026-10-30; search updated and documented on 2026-11-09 (Supplementary Table S11). 'leakage_risk' summarises the reported protocol only; it is not a finding of error.",
  "jamalpur_dataset": [
   {
    "key": "nirob2025",
@@ -19,7 +19,7 @@
   },
   {
    "key": "tanvir2026",
-   "study": "Tanvir et al., Healthcare Analytics 2026",
+   "study": "Tanvir et al., Healthcare Analytics 2026, doi:10.1016/j.health.2026.100475",
    "type": "Grey-wolf-optimised Extra Trees",
    "reported": "Acc 95.78%",
    "protocol": "Internal test set; details of resampling order not verifiable from public abstract",

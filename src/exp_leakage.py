@@ -66,16 +66,22 @@ def cv_eval(X, y, make_pipe, resample_whole=None, k=10):
 
 
 def split_eval(X, y, make_pipe, sampler, before_split, reps=10):
+    """80/20 split repeated with seeds 0..reps-1.
+    before_split=True  (leaky):   impute and resample the whole dataset, then split.
+    before_split=False (correct): split first; fit the imputer on the training part only, apply it to the
+                                  test part, then resample the training part only."""
     rows, dup = [], []
     for r in range(reps):
-        Xi = pd.DataFrame(SimpleImputer(strategy='median').fit_transform(X))
         if before_split:
+            Xi = pd.DataFrame(SimpleImputer(strategy='median').fit_transform(X))
             Xr, yr = sampler(r).fit_resample(Xi, y)
             Xtr, Xte, ytr, yte = train_test_split(Xr, yr, test_size=0.2, stratify=yr, random_state=r)
             keys = set(map(tuple, np.round(np.asarray(Xtr), 6)))
             dup.append(np.mean([tuple(v) in keys for v in np.round(np.asarray(Xte), 6)]))
         else:
-            Xtr, Xte, ytr, yte = train_test_split(Xi, y, test_size=0.2, stratify=y, random_state=r)
+            Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.2, stratify=y, random_state=r)
+            imp = SimpleImputer(strategy='median').fit(Xtr)
+            Xtr, Xte = pd.DataFrame(imp.transform(Xtr)), pd.DataFrame(imp.transform(Xte))
             Xtr, ytr = sampler(r).fit_resample(Xtr, ytr)
         m = make_pipe().fit(Xtr, ytr)
         rows.append(scores(yte, m.predict(Xte), m.predict_proba(Xte)[:, 1]))

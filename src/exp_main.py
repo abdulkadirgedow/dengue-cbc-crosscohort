@@ -5,11 +5,11 @@ Usage: python3 -I src/exp_main.py <jamalpur.csv> <dhaka.csv> <out_dir>
 """
 import sys, os, json, time, warnings
 import numpy as np, pandas as pd
-from sklearn.model_selection import RepeatedStratifiedKFold, StratifiedKFold, cross_val_predict
+from sklearn.model_selection import StratifiedGroupKFold, StratifiedKFold, cross_val_predict
 from sklearn.metrics import roc_auc_score
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import (load_jamalpur, load_dhaka, make_model, youden_threshold, threshold_metrics,
+from common import (load_jamalpur, load_dhaka, make_model, youden_threshold, threshold_metrics, duplicate_groups,
                     calibration, boot_ci, auc_dir_free, FEATS_ALL, FEATSETS, MODEL_NAMES, SEED)
 
 warnings.filterwarnings('ignore')
@@ -50,14 +50,17 @@ for fs, cols in FEATSETS.items():
 log('cohort discrimination done')
 
 # ------------------------------------------------ internal validation
-rskf = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=SEED)
+# Duplicate-aware repeated CV: records with identical feature vectors stay in the same fold
+# (StratifiedGroupKFold, 5 folds x 3 repeats), both for evaluation and for threshold selection.
 R['internal'] = {}
 for cname, (X, y) in COH.items():
     R['internal'][cname] = {}
+    g = duplicate_groups(X)
+    splits = [s for r in range(3) for s in StratifiedGroupKFold(5, shuffle=True, random_state=SEED + r).split(X, y, g)]
     for mname in MODEL_NAMES:
         rows = []
-        for tr, te in rskf.split(X, y):
-            thr, _ = youden_threshold(mname, X.iloc[tr], y[tr], folds=3)
+        for tr, te in splits:
+            thr, _ = youden_threshold(mname, X.iloc[tr], y[tr], folds=3, groups=g[tr])
             m = make_model(mname).fit(X.iloc[tr], y[tr])
             p = m.predict_proba(X.iloc[te])[:, 1]
             r = threshold_metrics(y[te], p, thr); r['auc'] = roc_auc_score(y[te], p); r['thr'] = thr
@@ -71,7 +74,7 @@ for cname, (X, y) in COH.items():
 def external(Xs, ys, Xt, yt, cols, tag, save=False):
     res = {}
     for mname in MODEL_NAMES:
-        thr, poof = youden_threshold(mname, Xs[cols], ys, folds=5)
+        thr, poof = youden_threshold(mname, Xs[cols], ys, folds=5, groups=duplicate_groups(Xs[cols]))
         m = make_model(mname).fit(Xs[cols], ys)
         p = m.predict_proba(Xt[cols])[:, 1]
         r = dict(auc=float(roc_auc_score(yt, p)), auc_ci=boot_ci(yt, p), thr=thr,

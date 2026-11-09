@@ -1,0 +1,24 @@
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Analysis & LR & RF & GBM & Stacked \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Jamalpur $\to$ Dhaka}}\\
+All 8 features (main analysis) & 0.523 & 0.788 & 0.776 & 0.637 \\
+Without RBC & 0.526 & 0.804 & 0.735 & 0.614 \\
+Ages 15--60 & 0.505 & 0.782 & 0.791 & 0.608 \\
+Ages 15--60, without RBC & 0.505 & 0.786 & 0.773 & 0.569 \\
+Platelets + WBC only & 0.690 & 0.733 & 0.695 & 0.453 \\
+Differential sum $\le$100\% & 0.520 & 0.794 & 0.759 & 0.639 \\
+Flagged Dhaka values kept & 0.526 & 0.794 & 0.782 & 0.637 \\
+Without class weights & 0.519 & 0.789 & 0.791 & 0.685 \\
+\multicolumn{5}{@{}l}{\textit{Dhaka $\to$ Jamalpur}}\\
+All 8 features (main analysis) & 0.560 & 0.558 & 0.526 & 0.543 \\
+Without RBC & 0.538 & 0.542 & 0.531 & 0.533 \\
+Ages 15--60 & 0.567 & 0.576 & 0.547 & 0.562 \\
+Ages 15--60, without RBC & 0.541 & 0.544 & 0.530 & 0.539 \\
+Platelets + WBC only & 0.537 & 0.490 & 0.497 & 0.516 \\
+Differential sum $\le$100\% & 0.561 & 0.558 & 0.538 & 0.549 \\
+Flagged Dhaka values kept & 0.539 & 0.563 & 0.529 & 0.547 \\
+Without class weights & 0.559 & 0.532 & 0.522 & 0.533 \\
+\bottomrule
+\end{tabular}

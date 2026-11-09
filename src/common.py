@@ -10,7 +10,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier, StackingClassifier
-from sklearn.model_selection import StratifiedKFold, cross_val_predict
+from sklearn.model_selection import StratifiedKFold, StratifiedGroupKFold, cross_val_predict
 from sklearn.metrics import roc_auc_score, roc_curve, brier_score_loss, confusion_matrix
 
 SEED = 42
@@ -37,8 +37,12 @@ def load_jamalpur(path):
     return X, y, j
 
 
-def load_dhaka(path):
-    """Dhaka 2025 (Mendeley 10.17632/jsbmtk8hty.4). Implausible values set to NaN."""
+def load_dhaka(path, flag_extremes=True):
+    """Dhaka 2025 (Mendeley 10.17632/jsbmtk8hty.4).
+
+    flag_extremes=True (main analysis): flagged extreme values are set to missing and imputed.
+    flag_extremes=False (sensitivity analysis): recorded values are kept as they are.
+    """
     d = pd.read_csv(path)
     X = pd.DataFrame({
         'Age': d['Age'].astype(float), 'Male': (d['Sex'] == 'Male').astype(int),
@@ -48,6 +52,8 @@ def load_dhaka(path):
     y = (d['Dengue NS1'] == 'Positive').astype(int).values
     cleaning = {'PLT<5': int((X.PLT < 5).sum()), 'WBC<1': int((X.WBC < 1).sum()),
                 'HCT<15': int((X.HCT < 15).sum()), 'RBC>8': int((X.RBC > 8).sum())}
+    if not flag_extremes:
+        return X, y, d, cleaning
     X.loc[X.PLT < 5, 'PLT'] = np.nan
     X.loc[X.WBC < 1, 'WBC'] = np.nan
     X.loc[X.HCT < 15, 'HCT'] = np.nan
@@ -56,32 +62,45 @@ def load_dhaka(path):
 
 
 # --------------------------------------------------------------- models
-def make_model(name, seed=SEED):
-    imp = SimpleImputer(strategy='median')
+def make_model(name, seed=SEED, weighted=True):
+    """Model pipelines. weighted=False drops the class weights (sensitivity analysis)."""
+    cw = 'balanced' if weighted else None
+    imp = lambda: SimpleImputer(strategy='median')
     if name == 'LR':
-        return make_pipeline(imp, StandardScaler(),
-                             LogisticRegression(max_iter=2000, class_weight='balanced'))
+        return make_pipeline(imp(), StandardScaler(), LogisticRegression(max_iter=2000, class_weight=cw))
     if name == 'RF':
-        return make_pipeline(imp, RandomForestClassifier(
-            n_estimators=300, min_samples_leaf=3, class_weight='balanced', random_state=seed, n_jobs=-1))
+        return make_pipeline(imp(), RandomForestClassifier(
+            n_estimators=300, min_samples_leaf=3, class_weight=cw, random_state=seed, n_jobs=-1))
     if name == 'GBM':
-        return make_pipeline(imp, HistGradientBoostingClassifier(
-            max_iter=200, learning_rate=0.05, class_weight='balanced', random_state=seed))
+        return make_pipeline(imp(), HistGradientBoostingClassifier(
+            max_iter=200, learning_rate=0.05, class_weight=cw, random_state=seed))
     if name == 'Stacked':
-        base = [('rf', RandomForestClassifier(n_estimators=200, min_samples_leaf=3, class_weight='balanced',
-                                              random_state=seed, n_jobs=-1)),
-                ('gbm', HistGradientBoostingClassifier(max_iter=150, learning_rate=0.05, class_weight='balanced',
-                                                       random_state=seed)),
-                ('lr', make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000, class_weight='balanced')))]
-        return make_pipeline(imp, StackingClassifier(
-            estimators=base, final_estimator=LogisticRegression(max_iter=2000, class_weight='balanced'), cv=3))
+        # Imputation sits inside each base learner, so it is refitted within the stack's own inner folds.
+        base = [('rf', make_pipeline(imp(), RandomForestClassifier(n_estimators=200, min_samples_leaf=3, class_weight=cw,
+                                                                   random_state=seed, n_jobs=-1))),
+                ('gbm', make_pipeline(imp(), HistGradientBoostingClassifier(max_iter=150, learning_rate=0.05,
+                                                                            class_weight=cw, random_state=seed))),
+                ('lr', make_pipeline(imp(), StandardScaler(), LogisticRegression(max_iter=2000, class_weight=cw)))]
+        return StackingClassifier(estimators=base,
+                                  final_estimator=LogisticRegression(max_iter=2000, class_weight=cw), cv=3)
     raise ValueError(name)
 
 
-def youden_threshold(model_name, X, y, seed=SEED, folds=3):
-    """Decision threshold maximising Youden's J on out-of-fold training predictions."""
-    p = cross_val_predict(make_model(model_name, seed), X, y,
-                          cv=StratifiedKFold(folds, shuffle=True, random_state=seed),
+def duplicate_groups(X):
+    """Group id per record: records with identical feature vectors share a group, so they never
+    fall into different cross-validation folds."""
+    key = X.fillna(-999.0).round(6).astype(float).apply(lambda r: tuple(r), axis=1)
+    return pd.factorize(key)[0]
+
+
+def youden_threshold(model_name, X, y, seed=SEED, folds=3, groups=None, weighted=True):
+    """Decision threshold maximising Youden's J on out-of-fold training predictions.
+    With groups given, duplicate feature vectors are kept in the same fold."""
+    if groups is None:
+        cv = StratifiedKFold(folds, shuffle=True, random_state=seed)
+    else:
+        cv = StratifiedGroupKFold(folds, shuffle=True, random_state=seed)
+    p = cross_val_predict(make_model(model_name, seed, weighted), X, y, cv=cv, groups=groups,
                           method='predict_proba')[:, 1]
     f, t, th = roc_curve(y, p)
     return float(th[np.argmax(t - f)]), p

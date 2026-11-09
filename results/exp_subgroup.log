@@ -1,0 +1,10 @@
+Jamalpur->Dhaka Female 417 283 LR 0.489, RF 0.814, GBM 0.786, Stacked 0.680
+Jamalpur->Dhaka Male 912 689 LR 0.547, RF 0.772, GBM 0.772, Stacked 0.604
+Jamalpur->Dhaka Age <15 81 46 LR 0.300, RF 0.712, GBM 0.792, Stacked 0.792
+Jamalpur->Dhaka Age 15-60 1200 882 LR 0.516, RF 0.783, GBM 0.762, Stacked 0.637
+Jamalpur->Dhaka Age >60 48 44 
+Dhaka->Jamalpur Female 805 555 LR 0.573, RF 0.573, GBM 0.526, Stacked 0.556
+Dhaka->Jamalpur Male 718 487 LR 0.546, RF 0.544, GBM 0.527, Stacked 0.531
+Dhaka->Jamalpur Age <15 17 4 
+Dhaka->Jamalpur Age 15-60 1300 887 LR 0.570, RF 0.568, GBM 0.533, Stacked 0.552
+Dhaka->Jamalpur Age >60 206 151 LR 0.483, RF 0.458, GBM 0.493, Stacked 0.480

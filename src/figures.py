@@ -85,13 +85,13 @@ def reliability(y, p, bins=10):
 fig4, ax = plt.subplots(1, 2, figsize=(7.2, 3.3), sharey=True)
 for i, (src, tgt, yt) in enumerate([('Jamalpur', 'Dhaka', yD), ('Dhaka', 'Jamalpur', yJ)]):
     a = ax[i]; a.plot([0, 1], [0, 1], color=INK2, lw=0.8, ls=':')
-    for mname in ['LR', 'RF', 'GBM']:
+    for mname in ['LR', 'RF', 'GBM', 'Stacked']:
         p = np.load(f'{P}/{src}_to_{tgt}_all8_{mname}.npy'); mp, ob = reliability(yt, p)
         e = M['external'][f'all8|{src}->{tgt}'][mname]
         a.plot(mp, ob, '-o', color=MOD_C[mname], lw=2, ms=4, label=f"{mname} (slope {e['cal_slope']:.2f})")
     a.set_xlim(0, 1); a.set_ylim(0, 1); a.set_aspect('equal')
     a.set_xlabel('Predicted probability'); panel_label(a, ['(a) Jamalpur → Dhaka', '(b) Dhaka → Jamalpur'][i], y=-0.22)
-    a.legend(loc='lower right', fontsize=9)
+    a.legend(loc='lower right', fontsize=8)
 ax[0].set_ylabel('Observed proportion positive')
 fig4.tight_layout(); fig4.savefig(f'{fig}/fig4_calibration.pdf'); fig4.savefig(f'{fig}/fig4_calibration.png'); plt.close(fig4)
 
@@ -102,7 +102,7 @@ for i, (src, tgt, yt) in enumerate([('Jamalpur', 'Dhaka', yD), ('Dhaka', 'Jamalp
     a = ax[i]; prev = yt.mean()
     a.plot(th, prev - (1 - prev) * th / (1 - th), color=INK2, lw=1, ls='--', label='Test all')
     a.axhline(0, color=INK2, lw=1, ls=':', label='Test none')
-    for mname in ['LR', 'RF', 'GBM']:
+    for mname in ['LR', 'RF', 'GBM', 'Stacked']:
         p = np.load(f'{P}/{src}_to_{tgt}_all8_{mname}.npy')
         a.plot(th, net_benefit(yt, p, th), color=MOD_C[mname], lw=2, label=mname)
     a.set_ylim(-0.1, max(prev, 0.8)); a.set_xlabel('Threshold probability')
