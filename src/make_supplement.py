@@ -336,13 +336,13 @@ ds = [
     ('Dhaka 2025 (Mendeley 10.17632/jsbmtk8hty.4)', '1,329', 'CBC subset; NS1', 'Main cohort'),
     ('Multi-site (Mendeley 10.17632/fmkp6fwrrk.1)', '2,085', 'Full CBC; ' + QQ + 'Result' + QE, 'Excluded: 220 records shared with Jamalpur'),
     ('Kalai (Mendeley 10.17632/xrsbyjs24t.1)', '1,003', 'CBC subset; ' + QQ + 'Final Output' + QE, 'Excluded: labels reproduced by one WBC cut-off'),
-    ('Riya et al.\\ 2023, two Dhaka hospitals (GitHub)', '320', 'CBC with differential, no HCT; ' + QQ + 'Result' + QE, 'Third external cohort (added in revision)'),
+    ('Riya et al.\\ 2023, two Dhaka hospitals (GitHub)', '320', 'CBC with differential, no HCT; ' + QQ + 'Result' + QE, 'Third external cohort'),
     ('Munshiganj (Mendeley 10.17632/673swz9tb4.1)', '1,018', 'Platelets, WBC, symptoms', 'Not analysed: no differential counts'),
     ('Dhaka survey (Mendeley 10.17632/zdtc3n6xv2.4)', '1,000', 'Platelets, WBC, NS1/IgG/IgM, symptoms', 'Not analysed: no differential counts'),
     ('Dhaka government institution (GitHub, ICCIT 2026)', '--', 'Hb, HCT, WBC, platelets; NS1', 'Not analysed: no differential counts'),
 ]
 extra += (r"""
-\begin{table}[htbp]\centering\caption{Search for public datasets and modelling studies, repeated and documented on 9 November 2026 (original search completed 30 October 2026). Queries were run in a web search engine; Mendeley Data, Kaggle and GitHub were searched for public datasets, and articles citing each data article were traced. No modelling study on the Jamalpur 2024 or Kalai datasets was found beyond the nine in Table~1; one more study used a different dataset to predict severity and was out of scope.}\footnotesize
+\begin{table}[htbp]\centering\caption{Search for public datasets and modelling studies, last run on 9 November 2026. Queries were run in a web search engine; Mendeley Data, Kaggle and GitHub were searched for public datasets, and articles citing each data article were traced. No modelling study on the Jamalpur 2024 or Kalai datasets was found beyond the nine in Table~1; one more study used a different dataset to predict severity and was out of scope.}\footnotesize
 \begin{tabularx}{\linewidth}{@{}p{0.4cm}X@{}}\toprule
 \multicolumn{2}{@{}l}{\textit{Queries}}\\
 """ + '\n'.join(f'{i+1} & {q} \\\\' for i, q in enumerate(queries)) + r"""

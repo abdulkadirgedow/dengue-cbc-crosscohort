@@ -8,7 +8,7 @@ Code, results and figures for the paper:
 
 > A. S. Gedow, M. M. U. Islam and A. H. Mohamed, "Do Blood-Count-Based Dengue Classifiers Generalize Across Clinical Cohorts? A Leakage-Free External Validation and Data-Integrity Audit of Public Bangladeshi Datasets," manuscript, 2026. (Update with the journal reference once published.)
 
-The study trains classifiers of the recorded dengue test result on routine complete blood count (CBC) data from one Bangladeshi cohort and tests them on others: Jamalpur 2024 and Dhaka 2025 in both directions, plus a smaller third cohort (Dhaka 2023) added during revision. It also audits four public datasets and measures how much common data-leakage mistakes inflate reported accuracy.
+The study trains classifiers of the recorded dengue test result on routine complete blood count (CBC) data from one Bangladeshi cohort and tests them on others: Jamalpur 2024 and Dhaka 2025 in both directions, plus a smaller third cohort (Dhaka 2023). It also audits four public datasets and measures how much common data-leakage mistakes inflate reported accuracy.
 
 ## Main findings
 
